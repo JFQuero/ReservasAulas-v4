@@ -9,7 +9,7 @@ import org.iesalandalus.programacion.reservasaulas.vista.IVistaReservasAulas;
 import org.iesalandalus.programacion.reservasaulas.vista.iutextual.Consola;
 import org.iesalandalus.programacion.reservasaulas.vista.iutextual.VistaReservasAulas;
 
-public class MainApp {
+public class MainAppIUTextual {
 
 	public static void main(String[] args) {
 		Consola.mostrarCabecera("Programa para la gestión de reservas de aulas del IES Al-Ándalus");

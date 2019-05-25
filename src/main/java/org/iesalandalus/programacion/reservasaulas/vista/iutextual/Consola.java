@@ -1,4 +1,4 @@
-package org.iesalandalus.programacion.reservasaulas.vista;
+package org.iesalandalus.programacion.reservasaulas.vista.iutextual;
 
 import java.time.LocalDate;
 
