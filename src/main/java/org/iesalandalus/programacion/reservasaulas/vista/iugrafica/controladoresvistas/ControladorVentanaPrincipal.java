@@ -212,11 +212,14 @@ public class ControladorVentanaPrincipal {
 		Profesor profesor = null;
 		try {
 			profesor = tvTablaProfesores.getSelectionModel().getSelectedItem();
+			if (profesor == null) {
+				Dialogos.mostrarDialogoInformacion("Borrar profesor", "Selecciona primero el profesor a borrar.");
+			}
 			if (profesor != null && Dialogos.mostrarDialogoConfirmacion("Borrar Profesor", "¿Está seguro de que desea borrar el profesor?", null)) {
 				controladorMVC.borrarProfesor(profesor);
 				profesores.remove(profesor);
 				Dialogos.mostrarDialogoInformacion("Borrar profesor", "Profesor borrado con éxito.");
-			}			
+			}
 		} catch (Exception e) {
 			Dialogos.mostrarDialogoError("Borrar Cliente", e.getMessage());
 		}
