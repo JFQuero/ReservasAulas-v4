@@ -6,6 +6,7 @@ import java.time.format.DateTimeFormatter;
 import org.iesalandalus.programacion.reservasaulas.controlador.IControladorReservasAulas;
 import org.iesalandalus.programacion.reservasaulas.modelo.dominio.*;
 import org.iesalandalus.programacion.reservasaulas.modelo.dominio.permanencia.*;
+import org.iesalandalus.programacion.reservasaulas.vista.iugrafica.utilidades.Dialogos;
 
 import javafx.beans.property.SimpleStringProperty;
 import javafx.collections.FXCollections;
@@ -16,6 +17,7 @@ import javafx.fxml.FXMLLoader;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.control.MenuItem;
+import javafx.scene.control.Tab;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
 import javafx.scene.control.TextField;
@@ -60,6 +62,8 @@ public class ControladorVentanaPrincipal {
     private Button btBorrarAula;
 
 	/* Tabla de Reservas */
+    @FXML
+	private Tab tabReservas;
 	@FXML
 	private TextField tfFiltrarReservasProfesor;
 	@FXML
@@ -79,6 +83,8 @@ public class ControladorVentanaPrincipal {
 
 	/* Tabla de Profesores */
 	@FXML
+	private Tab tabProfesores;
+	@FXML
 	private TextField tfFiltrarProfesoresNombre;
 	@FXML
 	private TableView<Profesor> tvTablaProfesores;
@@ -90,6 +96,8 @@ public class ControladorVentanaPrincipal {
 	private TableColumn<Profesor, String> tcCorreoProfesor;
 
 	/* Tabla de Aulas */
+	@FXML
+	private Tab tabAulas;
 	@FXML
 	private TextField tfFiltrarAulasNombre;
 	@FXML
@@ -156,6 +164,28 @@ public class ControladorVentanaPrincipal {
 	}
 	
 	@FXML
+	private void comprobarTabSeleccionada() {
+		if (tabReservas.isSelected()) {
+			btBorrarReserva.setDisable(false);
+			btBorrarProfesor.setDisable(true);
+			btBorrarAula.setDisable(true);
+			
+		} else if (tabProfesores.isSelected()) {
+			btBorrarReserva.setDisable(true);
+			btBorrarProfesor.setDisable(false);
+			btBorrarAula.setDisable(true);
+		} else {
+			btBorrarReserva.setDisable(true);
+			btBorrarProfesor.setDisable(true);
+			btBorrarAula.setDisable(false);
+		}
+	}
+	
+	/* Menu Reservas */
+	
+	
+	/* Menu Profesores */
+	@FXML
 	private void anadirProfesor(ActionEvent event) throws IOException {
 		crearAnadirProfesor();
 		anadirProfesor.showAndWait();
@@ -174,6 +204,21 @@ public class ControladorVentanaPrincipal {
 			anadirProfesor.setTitle("Añadir profesor");
 			anadirProfesor.initModality(Modality.APPLICATION_MODAL);
 			anadirProfesor.setScene(escenaAnadirProfesor);
+		}
+	}
+	
+	@FXML
+	private void borrarProfesor(ActionEvent event) {
+		Profesor profesor = null;
+		try {
+			profesor = tvTablaProfesores.getSelectionModel().getSelectedItem();
+			if (profesor != null && Dialogos.mostrarDialogoConfirmacion("Borrar Profesor", "¿Está seguro de que desea borrar el profesor?", null)) {
+				controladorMVC.borrarProfesor(profesor);
+				profesores.remove(profesor);
+				Dialogos.mostrarDialogoInformacion("Borrar profesor", "Profesor borrado con éxito.");
+			}			
+		} catch (Exception e) {
+			Dialogos.mostrarDialogoError("Borrar Cliente", e.getMessage());
 		}
 	}
 

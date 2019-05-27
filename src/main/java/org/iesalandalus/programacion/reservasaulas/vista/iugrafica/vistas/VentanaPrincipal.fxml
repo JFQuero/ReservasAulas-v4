@@ -50,7 +50,7 @@
                                     <Insets left="5.0" right="5.0" />
                                  </HBox.margin>
                               </Button>
-                              <Button fx:id="btBorrarReserva" mnemonicParsing="false" text="Borrar">
+                              <Button fx:id="btBorrarReserva" mnemonicParsing="false" text="Anular">
                                  <padding>
                                     <Insets bottom="10.0" left="10.0" right="10.0" top="10.0" />
                                  </padding>
@@ -63,7 +63,7 @@
                         <Label text="Profesores" />
                         <HBox alignment="CENTER" prefHeight="55.0" prefWidth="130.0">
                            <children>
-                              <Button fx:id="btAnadirProfesor" mnemonicParsing="false" text="Añadir">
+                              <Button fx:id="btAnadirProfesor" mnemonicParsing="false" onAction="#anadirProfesor" text="Añadir">
                                  <padding>
                                     <Insets bottom="10.0" left="10.0" right="10.0" top="10.0" />
                                  </padding>
@@ -71,7 +71,7 @@
                                     <Insets left="5.0" right="5.0" />
                                  </HBox.margin>
                               </Button>
-                              <Button fx:id="btBorrarProfesor" mnemonicParsing="false" text="Borrar">
+                              <Button fx:id="btBorrarProfesor" disable="true" mnemonicParsing="false" onAction="#borrarProfesor" text="Borrar">
                                  <padding>
                                     <Insets bottom="10.0" left="10.0" right="10.0" top="10.0" />
                                  </padding>
@@ -92,7 +92,7 @@
                                     <Insets left="5.0" right="5.0" />
                                  </HBox.margin>
                               </Button>
-                              <Button fx:id="btBorrarAula" mnemonicParsing="false" text="Borrar">
+                              <Button fx:id="btBorrarAula" disable="true" mnemonicParsing="false" text="Borrar">
                                  <padding>
                                     <Insets bottom="10.0" left="10.0" right="10.0" top="10.0" />
                                  </padding>
@@ -107,7 +107,7 @@
                </children></VBox>
             <TabPane prefHeight="595.0" prefWidth="680.0" tabClosingPolicy="UNAVAILABLE">
               <tabs>
-                <Tab text="Reservas">
+                <Tab fx:id="tabReservas" onSelectionChanged="#comprobarTabSeleccionada" text="Reservas">
                   <content>
                     <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="180.0" prefWidth="200.0">
                            <children>
@@ -155,7 +155,7 @@
                         </AnchorPane>
                   </content>
                 </Tab>
-                  <Tab text="Profesores">
+                  <Tab fx:id="tabProfesores" onSelectionChanged="#comprobarTabSeleccionada" text="Profesores">
                      <content>
                         <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="180.0" prefWidth="200.0">
                            <children>
@@ -191,7 +191,7 @@
                         </AnchorPane>
                      </content>
                   </Tab>
-                  <Tab text="Aulas">
+                  <Tab fx:id="tabAulas" onSelectionChanged="#comprobarTabSeleccionada" text="Aulas">
                      <content>
                         <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="180.0" prefWidth="200.0">
                            <children>
