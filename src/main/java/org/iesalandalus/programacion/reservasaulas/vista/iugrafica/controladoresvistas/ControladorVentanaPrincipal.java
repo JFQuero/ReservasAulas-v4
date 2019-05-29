@@ -14,8 +14,15 @@ import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
+import javafx.geometry.Insets;
+import javafx.geometry.Pos;
 import javafx.scene.Scene;
+import javafx.scene.control.Alert;
+import javafx.scene.control.Alert.AlertType;
 import javafx.scene.control.Button;
+import javafx.scene.control.ButtonType;
+import javafx.scene.control.DialogPane;
+import javafx.scene.control.Label;
 import javafx.scene.control.MenuItem;
 import javafx.scene.control.Tab;
 import javafx.scene.control.TableColumn;
@@ -26,6 +33,7 @@ import javafx.scene.image.ImageView;
 import javafx.scene.layout.VBox;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
+import javafx.stage.WindowEvent;
 
 public class ControladorVentanaPrincipal {
 
@@ -166,17 +174,26 @@ public class ControladorVentanaPrincipal {
 	@FXML
 	private void comprobarTabSeleccionada() {
 		if (tabReservas.isSelected()) {
+			btAnadirReserva.setDisable(false);
 			btBorrarReserva.setDisable(false);
+			btAnadirProfesor.setDisable(true);
 			btBorrarProfesor.setDisable(true);
+			btAnadirAula.setDisable(true);
 			btBorrarAula.setDisable(true);
 			
 		} else if (tabProfesores.isSelected()) {
+			btAnadirReserva.setDisable(true);
 			btBorrarReserva.setDisable(true);
+			btAnadirProfesor.setDisable(false);
 			btBorrarProfesor.setDisable(false);
+			btAnadirAula.setDisable(true);
 			btBorrarAula.setDisable(true);
 		} else {
+			btAnadirReserva.setDisable(true);
 			btBorrarReserva.setDisable(true);
+			btAnadirProfesor.setDisable(true);
 			btBorrarProfesor.setDisable(true);
+			btAnadirAula.setDisable(false);
 			btBorrarAula.setDisable(false);
 		}
 	}
@@ -195,7 +212,7 @@ public class ControladorVentanaPrincipal {
 	private void crearAnadirProfesor() throws IOException {
 		if (anadirProfesor == null) {
 			anadirProfesor = new Stage();
-			FXMLLoader cargadorAnadirProfesor = new FXMLLoader(getClass().getResource("../vistas/VentanaAnadirCliente.fxml"));
+			FXMLLoader cargadorAnadirProfesor = new FXMLLoader(getClass().getResource("../vistas/VentanaAnadirProfesor.fxml"));
 			VBox raizAnadirProfesor = cargadorAnadirProfesor.load();
 			ControladorAnadirProfesor controlAnadirProfesor = cargadorAnadirProfesor.getController();
 			controlAnadirProfesor.setControladorMVC(controladorMVC);
@@ -215,14 +232,85 @@ public class ControladorVentanaPrincipal {
 			if (profesor == null) {
 				Dialogos.mostrarDialogoInformacion("Borrar profesor", "Selecciona primero el profesor a borrar.");
 			}
-			if (profesor != null && Dialogos.mostrarDialogoConfirmacion("Borrar Profesor", "¿Está seguro de que desea borrar el profesor?", null)) {
+			if (profesor != null && Dialogos.mostrarDialogoConfirmacion("Borrar profesor", "¿Está seguro de que desea borrar el profesor?", null)) {
 				controladorMVC.borrarProfesor(profesor);
 				profesores.remove(profesor);
 				Dialogos.mostrarDialogoInformacion("Borrar profesor", "Profesor borrado con éxito.");
 			}
 		} catch (Exception e) {
-			Dialogos.mostrarDialogoError("Borrar Cliente", e.getMessage());
+			Dialogos.mostrarDialogoError("Borrar profesor", e.getMessage());
 		}
+	}
+	
+	/* Menus Aulas */
+	@FXML
+	private void anadirAula(ActionEvent event) throws IOException {
+		crearAnadirAula();
+		anadirAula.showAndWait();
+	}
+	
+	@FXML
+	private void crearAnadirAula() throws IOException {
+		if (anadirAula == null) {
+			anadirAula = new Stage();
+			FXMLLoader cargadorAnadirAula = new FXMLLoader(getClass().getResource("../vistas/VentanaAnadirAula.fxml"));
+			VBox raizAnadirAula = cargadorAnadirAula.load();
+			ControladorAnadirAula controlAnadirAula = cargadorAnadirAula.getController();
+			controlAnadirAula.setControladorMVC(controladorMVC);
+			controlAnadirAula.setAulas(aulas);
+			Scene escenaAnadirAula = new Scene(raizAnadirAula);
+			anadirAula.setTitle("Añadir Aula");
+			anadirAula.initModality(Modality.APPLICATION_MODAL);
+			anadirAula.setScene(escenaAnadirAula);
+		}
+	}
+	
+	@FXML
+	private void borrarAula(ActionEvent event) {
+		Aula aula = null;
+		try {
+			aula = tvTablaAulas.getSelectionModel().getSelectedItem();
+			if (aula == null) {
+				Dialogos.mostrarDialogoInformacion("Borrar aula", "Selecciona primero el aula a borrar.");
+			}
+			if (aula != null && Dialogos.mostrarDialogoConfirmacion("Borrar aula", "¿Está seguro de que desea borrar el aula?", null)) {
+				controladorMVC.borrarAula(aula);
+				aulas.remove(aula);
+				Dialogos.mostrarDialogoInformacion("Borrar aula", "Aula borrada con éxito.");
+			}
+		} catch (Exception e) {
+			Dialogos.mostrarDialogoError("Borrar aula", e.getMessage());
+		}
+	}
+	
+	/* Menu Barra Superior */
+	@FXML
+	private void confirmarSalida(ActionEvent event) {
+		if (Dialogos.mostrarDialogoConfirmacion("Salir", "¿Cerrar la aplicación?" , null)) {
+			controladorMVC.salir();
+			System.exit(0);
+		} else {
+			event.consume();
+		}
+	}
+	
+	@FXML
+	private void acercaDe() {
+		Alert dialogo = new Alert(AlertType.INFORMATION);
+		dialogo.setTitle("Acerca de...");
+		DialogPane panelDialogo = dialogo.getDialogPane();
+		panelDialogo.lookupButton(ButtonType.OK).setId("btAceptar");
+		VBox contenido = new VBox();
+		contenido.setAlignment(Pos.CENTER);
+		contenido.setPadding(new Insets(20,20,0,20));
+		contenido.setSpacing(20);
+		Image logo = new Image(getClass().getResourceAsStream("../imagenes/ReservaAulasJFQuero.png"), 200, 200, true, true);
+		Label titulo = new Label("Modulo de Programación - JavaFX");
+		Label texto = new Label("ReservaAulas-v4 - Diseñado por Juan Fernandez Quero");
+		texto.setStyle("-fx-font: 20 Arial");
+		contenido.getChildren().addAll(new ImageView(logo),titulo,texto);
+		panelDialogo.setHeader(contenido);
+		dialogo.showAndWait();
 	}
 
 }
