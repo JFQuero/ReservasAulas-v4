@@ -199,7 +199,43 @@ public class ControladorVentanaPrincipal {
 	}
 	
 	/* Menu Reservas */
+	@FXML
+	private void anadirReserva(ActionEvent event) throws IOException {
+		crearAnadirReserva();
+		anadirReserva.showAndWait();
+	}
 	
+	@FXML
+	private void crearAnadirReserva() throws IOException {
+			anadirReserva = new Stage();
+			FXMLLoader cargadorAnadirReserva = new FXMLLoader(getClass().getResource("../vistas/VentanaAnadirReserva.fxml"));
+			VBox raizAnadirReserva = cargadorAnadirReserva.load();
+			ControladorAnadirReserva controlAnadirReserva = cargadorAnadirReserva.getController();
+			controlAnadirReserva.setControladorMVC(controladorMVC);
+			controlAnadirReserva.setDatos(profesores, aulas, reservas);
+			Scene escenaAnadirReserva = new Scene(raizAnadirReserva);
+			anadirReserva.setTitle("Realizar reserva");
+			anadirReserva.initModality(Modality.APPLICATION_MODAL);
+			anadirReserva.setScene(escenaAnadirReserva);
+	}
+	
+	@FXML
+	private void borrarReserva(ActionEvent event) {
+		Reserva reserva = null;
+		try {
+			reserva = tvTablaReservas.getSelectionModel().getSelectedItem();
+			if (reserva == null) {
+				Dialogos.mostrarDialogoInformacion("Anular reserva", "Selecciona primero la reserva a anular.");
+			}
+			if (reserva != null && Dialogos.mostrarDialogoConfirmacion("Anular reserva", "¿Está seguro de que desea anular la reserva?", null)) {
+				controladorMVC.anularReserva(reserva);;
+				reservas.remove(reserva);
+				Dialogos.mostrarDialogoInformacion("Anular reserva", "Aula anulada con éxito.");
+			}
+		} catch (Exception e) {
+			Dialogos.mostrarDialogoError("Anular reserva", e.getMessage());
+		}
+	}
 	
 	/* Menu Profesores */
 	@FXML

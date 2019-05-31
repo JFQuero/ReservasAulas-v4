@@ -13,7 +13,7 @@ import javafx.scene.layout.HBox;
 import javafx.stage.Stage;
 
 public class ControladorAnadirProfesor {
-	
+
 	private static final String ER_OBLIGATORIO = ".+";
 	private static final String ER_TELEFONO = "\\d{9}";
 	private static final String ER_CORREO = "\\w+(?:\\.\\w+)*@\\w+\\.\\w{2,5}";
@@ -24,9 +24,9 @@ public class ControladorAnadirProfesor {
 	private TextField tfNombreProfesor;
 	@FXML
 	private TextField tfCorreoProfesor;
-    @FXML
-    private HBox hbTelefono;
-  	@FXML
+	@FXML
+	private HBox hbTelefono;
+	@FXML
 	private CheckBox cbTelefono;
 	@FXML
 	private TextField tfTelefono;
@@ -34,15 +34,15 @@ public class ControladorAnadirProfesor {
 	private Button btCancelar;
 	@FXML
 	private Button btAceptar;
-	
+
 	@FXML
 	private void initialize() {
-			tfNombreProfesor.textProperty().addListener((ob,ov,nv) -> compruebaCampoTexto(ER_OBLIGATORIO, tfNombreProfesor));
-			tfCorreoProfesor.textProperty().addListener((ob,ov,nv) -> compruebaCampoTexto(ER_OBLIGATORIO, tfCorreoProfesor));
-			tfCorreoProfesor.textProperty().addListener((ob,ov,nv) -> compruebaCampoTexto(ER_CORREO, tfCorreoProfesor));
-			tfTelefono.textProperty().addListener((ob,ov,nv) -> compruebaCampoTexto(ER_TELEFONO, tfTelefono));
+		tfNombreProfesor.textProperty().addListener((ob, ov, nv) -> compruebaCampoTexto(ER_OBLIGATORIO, tfNombreProfesor));
+		tfCorreoProfesor.textProperty().addListener((ob, ov, nv) -> compruebaCampoTexto(ER_OBLIGATORIO, tfCorreoProfesor));
+		tfCorreoProfesor.textProperty().addListener((ob, ov, nv) -> compruebaCampoTexto(ER_CORREO, tfCorreoProfesor));
+		tfTelefono.textProperty().addListener((ob, ov, nv) -> compruebaCampoTexto(ER_TELEFONO, tfTelefono));
 	}
-	
+
 	@FXML
 	private void seleccionTelefono() {
 		if (cbTelefono.isSelected()) {
@@ -51,7 +51,7 @@ public class ControladorAnadirProfesor {
 			hbTelefono.visibleProperty().set(false);
 		}
 	}
-	
+
 	@FXML
 	private void anadirProfesor() {
 		Profesor profesor = null;
@@ -62,18 +62,16 @@ public class ControladorAnadirProfesor {
 			Stage propietario = ((Stage) btAceptar.getScene().getWindow());
 			limpiarCampoTexto();
 			Dialogos.mostrarDialogoInformacion("Añadir profesor", "Profesor añadido con éxito", propietario);
-			
-			
 		} catch (Exception e) {
 			Dialogos.mostrarDialogoInformacion("Añadir profesor", e.getMessage());
 		}
 	}
-	
+
 	@FXML
 	private void cancelar() {
 		((Stage) btCancelar.getScene().getWindow()).close();
 	}
-	
+
 	private Profesor getProfesor() {
 		if (cbTelefono.isSelected() && tfTelefono != null) {
 			String nombre = tfNombreProfesor.getText();
@@ -86,7 +84,7 @@ public class ControladorAnadirProfesor {
 			return new Profesor(nombre, correo);
 		}
 	}
-	
+
 	private void compruebaCampoTexto(String er, TextField campoTexto) {
 		String texto = campoTexto.getText();
 		if (texto.matches(er)) {
@@ -95,7 +93,7 @@ public class ControladorAnadirProfesor {
 			campoTexto.setStyle("-fx-border-color: red");
 		}
 	}
-	
+
 	private void limpiarCampoTexto() {
 		tfNombreProfesor.setText("");
 		tfCorreoProfesor.setText("");
@@ -105,12 +103,11 @@ public class ControladorAnadirProfesor {
 	}
 
 	public void setControladorMVC(IControladorReservasAulas controladorMVC) {
-		this.controladorMVC = controladorMVC;		
+		this.controladorMVC = controladorMVC;
 	}
 
 	public void setProfesores(ObservableList<Profesor> profesores) {
 		this.profesores = profesores;
 	}
-	
 
 }
