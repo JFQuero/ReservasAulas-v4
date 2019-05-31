@@ -20,31 +20,22 @@ public class ControladorAnadirProfesor {
 	private IControladorReservasAulas controladorMVC;
 	private ObservableList<Profesor> profesores;
 
-	@FXML
-	private TextField tfNombreProfesor;
-	@FXML
-	private TextField tfCorreoProfesor;
-	@FXML
-	private HBox hbTelefono;
-	@FXML
-	private CheckBox cbTelefono;
-	@FXML
-	private TextField tfTelefono;
-	@FXML
-	private Button btCancelar;
-	@FXML
-	private Button btAceptar;
+	@FXML	private TextField tfNombreProfesor;
+	@FXML	private TextField tfCorreoProfesor;
+	@FXML	private HBox hbTelefono;
+	@FXML	private CheckBox cbTelefono;
+	@FXML	private TextField tfTelefono;
+	@FXML	private Button btCancelar;
+	@FXML	private Button btAceptar;
 
-	@FXML
-	private void initialize() {
+	@FXML	private void initialize() {
 		tfNombreProfesor.textProperty().addListener((ob, ov, nv) -> compruebaCampoTexto(ER_OBLIGATORIO, tfNombreProfesor));
 		tfCorreoProfesor.textProperty().addListener((ob, ov, nv) -> compruebaCampoTexto(ER_OBLIGATORIO, tfCorreoProfesor));
 		tfCorreoProfesor.textProperty().addListener((ob, ov, nv) -> compruebaCampoTexto(ER_CORREO, tfCorreoProfesor));
 		tfTelefono.textProperty().addListener((ob, ov, nv) -> compruebaCampoTexto(ER_TELEFONO, tfTelefono));
 	}
 
-	@FXML
-	private void seleccionTelefono() {
+	@FXML	private void seleccionTelefono() {
 		if (cbTelefono.isSelected()) {
 			hbTelefono.visibleProperty().set(true);
 		} else {
@@ -52,8 +43,7 @@ public class ControladorAnadirProfesor {
 		}
 	}
 
-	@FXML
-	private void anadirProfesor() {
+	@FXML	private void anadirProfesor() {
 		Profesor profesor = null;
 		try {
 			profesor = getProfesor();
@@ -67,8 +57,7 @@ public class ControladorAnadirProfesor {
 		}
 	}
 
-	@FXML
-	private void cancelar() {
+	@FXML	private void cancelar() {
 		((Stage) btCancelar.getScene().getWindow()).close();
 	}
 

@@ -35,38 +35,25 @@ public class ControladorAnadirReserva {
 	private ObservableList<String> tramosPermitidos = FXCollections.observableArrayList("Mañana", "Tarde");
 	private ToggleGroup tgTipoReserva = new ToggleGroup();
 
-	@FXML
-	private ComboBox<String> cbProfesores;
-	@FXML
-	private ComboBox<String> cbAulas;
-	@FXML
-	private Label lbHora;
-	@FXML
-	private Label lbTramo;
-	@FXML
-	private ComboBox<String> cbTramo;
-	@FXML
-	private ComboBox<String> cbHora;
-	@FXML
-	private DatePicker dpFecha;
-	@FXML
-	private RadioButton rbTramo;
-	@FXML
-	private RadioButton rbHoras;
-	@FXML
-	private Button btCancelar;
-	@FXML
-	private Button btAceptar;
+	@FXML	private ComboBox<String> cbProfesores;
+	@FXML	private ComboBox<String> cbAulas;
+	@FXML	private Label lbHora;
+	@FXML	private Label lbTramo;
+	@FXML	private ComboBox<String> cbTramo;
+	@FXML	private ComboBox<String> cbHora;
+	@FXML	private DatePicker dpFecha;
+	@FXML	private RadioButton rbTramo;
+	@FXML	private RadioButton rbHoras;
+	@FXML	private Button btCancelar;
+	@FXML	private Button btAceptar;
 
-	@FXML
-	private void initialize() {
+	@FXML	private void initialize() {
 		rbTramo.setToggleGroup(tgTipoReserva);
 		rbHoras.setToggleGroup(tgTipoReserva);
 		limitarFecha();
 	}
 
-	@FXML
-	private void anadirReserva() {
+	@FXML	private void anadirReserva() {
 		Reserva reserva = null;
 		try {
 			reserva = getReserva();
@@ -99,13 +86,11 @@ public class ControladorAnadirReserva {
 
 	}
 
-	@FXML
-	private void cancelar() {
+	@FXML	private void cancelar() {
 		((Stage) btCancelar.getScene().getWindow()).close();
 	}
 
-	@FXML
-	private void comprobarSeleccionTipo() {
+	@FXML	private void comprobarSeleccionTipo() {
 		if (rbTramo.isSelected()) {
 			lbTramo.setOpacity(1);
 			cbTramo.setDisable(false);

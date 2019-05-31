@@ -11,6 +11,8 @@ import org.iesalandalus.programacion.reservasaulas.vista.iugrafica.utilidades.Di
 import javafx.beans.property.SimpleStringProperty;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
+import javafx.collections.transformation.FilteredList;
+import javafx.collections.transformation.SortedList;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
@@ -43,82 +45,55 @@ public class ControladorVentanaPrincipal {
 	private ObservableList<Aula> aulas = FXCollections.observableArrayList();
 	private Image logo = new Image(getClass().getResourceAsStream("../imagenes/ReservaAulasJFQuero2.png"), 130, 80, true, true);
 	private static final DateTimeFormatter FORMATO_FECHA = DateTimeFormatter.ofPattern("dd/MM/yyyy");
+	private FilteredList<Reserva> reservasFiltradas = new FilteredList<>(reservas, p -> true);
+	private FilteredList<Profesor> profesoresFiltrados = new FilteredList<>(profesores, p -> true);
+	private FilteredList<Aula> aulasFiltradas = new FilteredList<>(aulas, p -> true);
 	
 	private Stage anadirReserva;
 	private Stage anadirProfesor;
 	private Stage anadirAula;
 
-	@FXML
-	private MenuItem miSalir;
-	@FXML
-	private MenuItem miAcercaDe;
-	@FXML
-	private ImageView imgLogoPrincipal;
+	@FXML	private MenuItem miSalir;
+	@FXML	private MenuItem miAcercaDe;
+	@FXML	private ImageView imgLogoPrincipal;
 	
 	/* Menu Lateral */
-    @FXML
-    private Button btAnadirReserva;
-    @FXML
-    private Button btBorrarReserva;
-    @FXML
-    private Button btAnadirProfesor;
-    @FXML
-    private Button btBorrarProfesor;
-    @FXML
-    private Button btAnadirAula;
-    @FXML
-    private Button btBorrarAula;
+    @FXML    private Button btAnadirReserva;
+    @FXML    private Button btBorrarReserva;
+    @FXML    private Button btAnadirProfesor;
+    @FXML    private Button btBorrarProfesor;
+    @FXML    private Button btAnadirAula;
+    @FXML    private Button btBorrarAula;
 
 	/* Tabla de Reservas */
-    @FXML
-	private Tab tabReservas;
-	@FXML
-	private TextField tfFiltrarReservasProfesor;
-	@FXML
-	private TextField tfFiltrarReservasAula;
-	@FXML
-	private TableView<Reserva> tvTablaReservas;
-	@FXML
-	private TableColumn<Reserva, String> tcProfesorReserva;
-	@FXML
-	private TableColumn<Reserva, String> tcAulaReserva;
-	@FXML
-	private TableColumn<Reserva, String> tcDiaReserva;
-	@FXML
-	private TableColumn<Reserva, String> tcTipoReserva;
-	@FXML
-	private TableColumn<Reserva, String> tcTramoHoraReserva;
+    @FXML	private Tab tabReservas;
+	@FXML	private TextField tfFiltrarReservasProfesor;
+	@FXML	private TextField tfFiltrarReservasAula;
+	@FXML	private TableView<Reserva> tvTablaReservas;
+	@FXML	private TableColumn<Reserva, String> tcProfesorReserva;
+	@FXML	private TableColumn<Reserva, String> tcAulaReserva;
+	@FXML	private TableColumn<Reserva, String> tcDiaReserva;
+	@FXML	private TableColumn<Reserva, String> tcTipoReserva;
+	@FXML	private TableColumn<Reserva, String> tcTramoHoraReserva;
 
 	/* Tabla de Profesores */
-	@FXML
-	private Tab tabProfesores;
-	@FXML
-	private TextField tfFiltrarProfesoresNombre;
-	@FXML
-	private TableView<Profesor> tvTablaProfesores;
-	@FXML
-	private TableColumn<Profesor, String> tcNombreProfesor;
-	@FXML
-	private TableColumn<Profesor, String> tcTelefonoProfesor;
-	@FXML
-	private TableColumn<Profesor, String> tcCorreoProfesor;
+	@FXML	private Tab tabProfesores;
+	@FXML	private TextField tfFiltrarProfesoresNombre;
+	@FXML	private TableView<Profesor> tvTablaProfesores;
+	@FXML	private TableColumn<Profesor, String> tcNombreProfesor;
+	@FXML	private TableColumn<Profesor, String> tcTelefonoProfesor;
+	@FXML	private TableColumn<Profesor, String> tcCorreoProfesor;
 
 	/* Tabla de Aulas */
-	@FXML
-	private Tab tabAulas;
-	@FXML
-	private TextField tfFiltrarAulasNombre;
-	@FXML
-	private TableView<Aula> tvTablaAulas;
-	@FXML
-	private TableColumn<Aula, String> tcNombreAula;
-	@FXML
-	private TableColumn<Aula, String> tcPuestosAula;
+	@FXML	private Tab tabAulas;
+	@FXML	private TextField tfFiltrarAulasNombre;
+	@FXML	private TableView<Aula> tvTablaAulas;
+	@FXML	private TableColumn<Aula, String> tcNombreAula;
+	@FXML	private TableColumn<Aula, String> tcPuestosAula;
 	
 	
 	/* Otros Metodos */
-	@FXML
-	private void initialize() {
+	@FXML	private void initialize() {
 		imgLogoPrincipal.setImage(logo);
 		tvTablaReservas.setItems(reservas);
 		tvTablaProfesores.setItems(profesores);
@@ -129,14 +104,73 @@ public class ControladorVentanaPrincipal {
 		tcDiaReserva.setCellValueFactory(reserva -> new SimpleStringProperty(FORMATO_FECHA.format(reserva.getValue().getPermanencia().getDia())));
 		tcTipoReserva.setCellValueFactory(reserva -> new SimpleStringProperty(getTipoReserva(reserva.getValue())));
 		tcTramoHoraReserva.setCellValueFactory(reserva -> new SimpleStringProperty(getTramoUHoraReserva(reserva.getValue())));
+		
+		SortedList<Reserva> reservasOrdenadas = new SortedList<>(reservasFiltradas);
+		reservasOrdenadas.comparatorProperty().bind(tvTablaReservas.comparatorProperty());
+		tvTablaReservas.setItems(reservasOrdenadas);
+		
+		//Filtrado por Profesor
+		tfFiltrarReservasProfesor.textProperty().addListener((ob, ov, nv) ->
+		reservasFiltradas.setPredicate(reserva -> {
+			if (nv == null || nv.isEmpty()) {
+				return true;
+			}
+			String nombre = reserva.getProfesor().getNombre().toLowerCase();
+			return nombre.startsWith(nv.toLowerCase());
+		}));
+		
+		tfFiltrarReservasProfesor.focusedProperty().addListener((ob, ov, nv) -> {
+			tfFiltrarReservasAula.clear();
+		});
+		
+		//Filtrado por Aula
+		tfFiltrarReservasAula.textProperty().addListener((ob, ov, nv) ->
+		reservasFiltradas.setPredicate(reserva -> {
+			if (nv == null || nv.isEmpty()) {
+				return true;
+			}
+			String nombre = reserva.getAula().getNombre().toLowerCase();
+			return nombre.contains(nv.toLowerCase());
+		}));		
+		
+		tfFiltrarReservasAula.focusedProperty().addListener((ob, ov, nv) -> {
+			tfFiltrarReservasProfesor.clear();
+		});
 
 		//Profesores
 		tcNombreProfesor.setCellValueFactory( profesor -> new SimpleStringProperty(profesor.getValue().getNombre()));
 		tcTelefonoProfesor.setCellValueFactory( profesor -> new SimpleStringProperty(profesor.getValue().getTelefono()));
 		tcCorreoProfesor.setCellValueFactory( profesor -> new SimpleStringProperty(profesor.getValue().getCorreo()));
+		
+		SortedList<Profesor> profesoresOrdenados = new SortedList<>(profesoresFiltrados);
+		profesoresOrdenados.comparatorProperty().bind(tvTablaProfesores.comparatorProperty());
+		tvTablaProfesores.setItems(profesoresOrdenados);
+		
+		tfFiltrarProfesoresNombre.textProperty().addListener((ob,ov,nv) ->
+		profesoresFiltrados.setPredicate(profesor -> {
+			if (nv == null || nv.isEmpty()) {
+				return true;
+			}
+			String nombre = profesor.getNombre().toLowerCase();
+			return nombre.startsWith(nv.toLowerCase());
+		}));
+		
 		//Aulas
 		tcNombreAula.setCellValueFactory( aula -> new SimpleStringProperty(aula.getValue().getNombre()));
 		tcPuestosAula.setCellValueFactory( aula -> new SimpleStringProperty(Integer.toString(aula.getValue().getPuestos())));
+		
+		SortedList<Aula> aulasOrdenadas = new SortedList<>(aulasFiltradas);
+		aulasOrdenadas.comparatorProperty().bind(tvTablaAulas.comparatorProperty());
+		tvTablaAulas.setItems(aulasOrdenadas);
+		
+		tfFiltrarAulasNombre.textProperty().addListener((ob,ov,nv) ->
+		aulasFiltradas.setPredicate(aula -> {
+			if (nv == null || nv.isEmpty()) {
+				return true;
+			}
+			String nombre = aula.getNombre().toLowerCase();
+			return nombre.contains(nv.toLowerCase());
+		}));
 	}
 
 	public void actualizaReservas() {
@@ -171,8 +205,7 @@ public class ControladorVentanaPrincipal {
 		}
 	}
 	
-	@FXML
-	private void comprobarTabSeleccionada() {
+	@FXML	private void comprobarTabSeleccionada() {
 		if (tabReservas.isSelected()) {
 			btAnadirReserva.setDisable(false);
 			btBorrarReserva.setDisable(false);
@@ -199,14 +232,12 @@ public class ControladorVentanaPrincipal {
 	}
 	
 	/* Menu Reservas */
-	@FXML
-	private void anadirReserva(ActionEvent event) throws IOException {
+	@FXML	private void anadirReserva(ActionEvent event) throws IOException {
 		crearAnadirReserva();
 		anadirReserva.showAndWait();
 	}
 	
-	@FXML
-	private void crearAnadirReserva() throws IOException {
+	@FXML	private void crearAnadirReserva() throws IOException {
 			anadirReserva = new Stage();
 			FXMLLoader cargadorAnadirReserva = new FXMLLoader(getClass().getResource("../vistas/VentanaAnadirReserva.fxml"));
 			VBox raizAnadirReserva = cargadorAnadirReserva.load();
@@ -219,8 +250,7 @@ public class ControladorVentanaPrincipal {
 			anadirReserva.setScene(escenaAnadirReserva);
 	}
 	
-	@FXML
-	private void borrarReserva(ActionEvent event) {
+	@FXML	private void borrarReserva(ActionEvent event) {
 		Reserva reserva = null;
 		try {
 			reserva = tvTablaReservas.getSelectionModel().getSelectedItem();
@@ -238,14 +268,12 @@ public class ControladorVentanaPrincipal {
 	}
 	
 	/* Menu Profesores */
-	@FXML
-	private void anadirProfesor(ActionEvent event) throws IOException {
+	@FXML	private void anadirProfesor(ActionEvent event) throws IOException {
 		crearAnadirProfesor();
 		anadirProfesor.showAndWait();
 	}
 	
-	@FXML
-	private void crearAnadirProfesor() throws IOException {
+	@FXML	private void crearAnadirProfesor() throws IOException {
 		if (anadirProfesor == null) {
 			anadirProfesor = new Stage();
 			FXMLLoader cargadorAnadirProfesor = new FXMLLoader(getClass().getResource("../vistas/VentanaAnadirProfesor.fxml"));
@@ -260,8 +288,7 @@ public class ControladorVentanaPrincipal {
 		}
 	}
 	
-	@FXML
-	private void borrarProfesor(ActionEvent event) {
+	@FXML	private void borrarProfesor(ActionEvent event) {
 		Profesor profesor = null;
 		try {
 			profesor = tvTablaProfesores.getSelectionModel().getSelectedItem();
@@ -279,14 +306,12 @@ public class ControladorVentanaPrincipal {
 	}
 	
 	/* Menus Aulas */
-	@FXML
-	private void anadirAula(ActionEvent event) throws IOException {
+	@FXML	private void anadirAula(ActionEvent event) throws IOException {
 		crearAnadirAula();
 		anadirAula.showAndWait();
 	}
 	
-	@FXML
-	private void crearAnadirAula() throws IOException {
+	@FXML	private void crearAnadirAula() throws IOException {
 		if (anadirAula == null) {
 			anadirAula = new Stage();
 			FXMLLoader cargadorAnadirAula = new FXMLLoader(getClass().getResource("../vistas/VentanaAnadirAula.fxml"));
@@ -301,8 +326,7 @@ public class ControladorVentanaPrincipal {
 		}
 	}
 	
-	@FXML
-	private void borrarAula(ActionEvent event) {
+	@FXML	private void borrarAula(ActionEvent event) {
 		Aula aula = null;
 		try {
 			aula = tvTablaAulas.getSelectionModel().getSelectedItem();
@@ -320,8 +344,7 @@ public class ControladorVentanaPrincipal {
 	}
 	
 	/* Menu Barra Superior */
-	@FXML
-	private void confirmarSalida(ActionEvent event) {
+	@FXML	private void confirmarSalida(ActionEvent event) {
 		if (Dialogos.mostrarDialogoConfirmacion("Salir", "¿Cerrar la aplicación?" , null)) {
 			controladorMVC.salir();
 			System.exit(0);
@@ -330,8 +353,7 @@ public class ControladorVentanaPrincipal {
 		}
 	}
 	
-	@FXML
-	private void acercaDe() {
+	@FXML	private void acercaDe() {
 		Alert dialogo = new Alert(AlertType.INFORMATION);
 		dialogo.setTitle("Acerca de...");
 		DialogPane panelDialogo = dialogo.getDialogPane();

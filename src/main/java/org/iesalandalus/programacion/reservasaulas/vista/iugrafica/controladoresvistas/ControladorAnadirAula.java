@@ -18,27 +18,19 @@ public class ControladorAnadirAula {
 	private IControladorReservasAulas controladorMVC;
 	private ObservableList<Aula> aulas = FXCollections.observableArrayList();
 
-	@FXML
-	private TextField tfNombreAula;
-	@FXML
-	private TextField tfPuestos;
-	@FXML
-	private HBox hbTelefono;
-	@FXML
-	private TextField tfTelefono;
-	@FXML
-	private Button btCancelar;
-	@FXML
-	private Button btAceptar;
+	@FXML	private TextField tfNombreAula;
+	@FXML	private TextField tfPuestos;
+	@FXML	private HBox hbTelefono;
+	@FXML	private TextField tfTelefono;
+	@FXML	private Button btCancelar;
+	@FXML	private Button btAceptar;
 
-	@FXML
-	private void initialize() {
+	@FXML	private void initialize() {
 		tfNombreAula.textProperty().addListener((ob, ov, nv) -> compruebaCampoTexto(ER_OBLIGATORIO, tfNombreAula));
 		tfPuestos.textProperty().addListener((ob, ov, nv) -> compruebaCampoTexto(ER_OBLIGATORIO, tfPuestos));
 	}
 
-	@FXML
-	private void anadirAula() {
+	@FXML	private void anadirAula() {
 		Aula aula = null;
 		try {
 			aula = getAula();
@@ -53,8 +45,7 @@ public class ControladorAnadirAula {
 		}
 	}
 
-	@FXML
-	private void cancelar() {
+	@FXML	private void cancelar() {
 		((Stage) btCancelar.getScene().getWindow()).close();
 	}
 
